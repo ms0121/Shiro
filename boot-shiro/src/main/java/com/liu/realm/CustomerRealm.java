@@ -8,6 +8,7 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
@@ -25,6 +26,18 @@ public class CustomerRealm extends AuthorizingRealm {
     // 授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        // 获取用户的主凭证信息
+        String primaryPrincipal = (String) principalCollection.getPrimaryPrincipal();
+        // 根据主凭证信息(用户信息)获取权限信息
+        if ("zhangsan".equals(primaryPrincipal)) {
+            SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+            // 给用户设置角色
+            authorizationInfo.addRole("admin");
+            // 给用户添加资源权限
+            authorizationInfo.addStringPermission("user:create:*");
+            authorizationInfo.addStringPermission("user:update:*");
+            return authorizationInfo;
+        }
         return null;
     }
 
@@ -40,7 +53,7 @@ public class CustomerRealm extends AuthorizingRealm {
         User user = userService.findByUserName(principal);
 
         // 判断用户是否存在，存在则进行下一步的密码校验工作
-        if (!ObjectUtils.isEmpty(user)){
+        if (!ObjectUtils.isEmpty(user)) {
             // 认证密码
             simpleAuthenticationInfo = new SimpleAuthenticationInfo(principal, // 用户凭证(username)
                     user.getPassword(), // 用户密码
