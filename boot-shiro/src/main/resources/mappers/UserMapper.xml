@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.liu.mapper.UserMapper">
+
+    <!--  插入新注册的用户信息  -->
+    <insert id="save">
+        insert into t_user(username, password, salt)
+        values (#{username}, #{password}, #{salt})
+    </insert>
+
+    <!--  根据用户名查询用户密码和该用户的随机salt  -->
+    <select id="findByUserName" parameterType="string" resultType="com.liu.entity.User">
+        select id, username, password, salt
+        from t_user
+        where username = #{name}
+    </select>
+
+</mapper>
