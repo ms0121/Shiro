@@ -1,23 +1,17 @@
-package com.liu.entity;
+package com.liu.query;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 @Data
 @Accessors(chain = true)
-@AllArgsConstructor
 @NoArgsConstructor
-public class User {
+@AllArgsConstructor
+public class UserQuery {
     private Integer id;
     private String username;
-    private String password;
-    private String salt;
-
-    // 用于存放用户所拥有的角色列表
-    private List<Role> roles;
-
+    private Integer rid;
+    private String rname;
 }

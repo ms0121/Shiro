@@ -1,8 +1,11 @@
 package com.liu.realm;
 
+import com.liu.entity.Role;
 import com.liu.entity.User;
+import com.liu.query.UserQuery;
 import com.liu.service.UserService;
 import com.liu.utils.ApplicationContextUtils;
+import com.sun.deploy.ui.UIFactory;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -12,7 +15,10 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+
+import java.util.List;
 
 // 自定义的Realm实现
 public class CustomerRealm extends AuthorizingRealm {
@@ -28,16 +34,31 @@ public class CustomerRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         // 获取用户的主凭证信息
         String primaryPrincipal = (String) principalCollection.getPrimaryPrincipal();
-        // 根据主凭证信息(用户信息)获取权限信息
-        if ("zhangsan".equals(primaryPrincipal)) {
+
+        // 认证之后继续进行授权(从数据库中进行查询相应的角色信息)
+        // 获取spring容器中指定的bean对象，从而实现从数据库中查询用户信息
+        UserService userService = (UserService) ApplicationContextUtils.getBean("userService");
+        List<Role> roles = userService.findRoleByUserName(primaryPrincipal);
+
+        if (!CollectionUtils.isEmpty(roles)){
             SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-            // 给用户设置角色
-            authorizationInfo.addRole("admin");
-            // 给用户添加资源权限
-            authorizationInfo.addStringPermission("user:create:*");
-            authorizationInfo.addStringPermission("user:update:*");
+            roles.forEach(role -> {
+                authorizationInfo.addRole(role.getName());
+            });
             return authorizationInfo;
         }
+
+        //        // 根据主凭证信息(用户信息)获取权限信息
+        //        if ("zhangsan".equals(primaryPrincipal)) {
+        //            SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+        //            // 给用户设置角色
+        //            authorizationInfo.addRole("admin");
+        //            // 给用户添加资源权限
+        //            authorizationInfo.addStringPermission("user:create:*");
+        //            authorizationInfo.addStringPermission("user:update:*");
+        //            return authorizationInfo;
+        //        }
+
         return null;
     }
 
