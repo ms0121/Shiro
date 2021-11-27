@@ -1,5 +1,6 @@
 package com.liu.service.impl;
 
+import com.liu.entity.Perms;
 import com.liu.entity.Role;
 import com.liu.entity.User;
 import com.liu.mapper.UserMapper;
@@ -40,10 +41,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Role> findRoleByUserName(String name) {
-        List<Role> roles = userMapper.findRoleByUserName(name);
-        System.out.println("user = " + roles);
-        return roles;
+    public User findRoleByUserName(String name) {
+        User user = userMapper.findRoleByUserName(name);
+        System.out.println("users = " + user);
+        return user;
+    }
+
+    @Override
+    public List<Perms> findPermsByRoleId(Integer id) {
+        List<Perms> perms = userMapper.findPermsByRoleId(id);
+        System.out.println("perms = " + perms);
+        return perms;
     }
 
 }

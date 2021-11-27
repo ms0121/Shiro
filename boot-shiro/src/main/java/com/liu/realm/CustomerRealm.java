@@ -1,11 +1,9 @@
 package com.liu.realm;
 
-import com.liu.entity.Role;
+import com.liu.entity.Perms;
 import com.liu.entity.User;
-import com.liu.query.UserQuery;
 import com.liu.service.UserService;
 import com.liu.utils.ApplicationContextUtils;
-import com.sun.deploy.ui.UIFactory;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -38,12 +36,22 @@ public class CustomerRealm extends AuthorizingRealm {
         // 认证之后继续进行授权(从数据库中进行查询相应的角色信息)
         // 获取spring容器中指定的bean对象，从而实现从数据库中查询用户信息
         UserService userService = (UserService) ApplicationContextUtils.getBean("userService");
-        List<Role> roles = userService.findRoleByUserName(primaryPrincipal);
+        User user = userService.findRoleByUserName(primaryPrincipal);
 
-        if (!CollectionUtils.isEmpty(roles)){
+        // 判断当前用户是否拥有角色
+        if (!CollectionUtils.isEmpty(user.getRoles())){
             SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-            roles.forEach(role -> {
+            user.getRoles().forEach(role -> {
                 authorizationInfo.addRole(role.getName());
+                System.out.println("role.getId() = " + role.getId());
+                // 判断当前角色拥有的权限信息
+                List<Perms> perms = userService.findPermsByRoleId(role.getId());
+                if (!CollectionUtils.isEmpty(perms)){
+                    // 将当前用户所拥有的权限添加到授权当中
+                    perms.forEach(perms1 -> {
+                        authorizationInfo.addStringPermission(perms1.getName());
+                    });
+                }
             });
             return authorizationInfo;
         }

@@ -18,28 +18,49 @@
         where username = #{name}
     </select>
 
-<!--    <resultMap id="userMap" type="com.liu.entity.User">-->
-<!--        <id column="uid" property="id"/>-->
-<!--        <result column="username" property="username"/>-->
-<!--        <collection property="roles" javaType="list" ofType="com.liu.entity.Role">-->
-<!--            <id column="id" property="id"/>-->
-<!--            <result column="rname" property="name"/>-->
-<!--        </collection>-->
-<!--    </resultMap>-->
+    <resultMap id="userMap" type="com.liu.entity.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <!--  一对多的设置：property：类中的属性名， javaType：属性的类型    ofType：类型的泛型值    -->
+        <collection property="roles" javaType="list" ofType="com.liu.entity.Role">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+        </collection>
+    </resultMap>
 
-    <select id="findRoleByUserName" parameterType="String" resultType="com.liu.entity.Role">
-        SELECT r.id,
-               r.name
-        FROM t_user u
-        LEFT JOIN
+    <select id="findRoleByUserName" parameterType="string" resultMap="userMap">
+        select u.id,
+               u.username,
+               r.id   rid,
+               r.name rname
+        from t_user u
+                 left join
              t_user_role ur
-        ON
-             u.id = ur.userid
-        LEFT JOIN
+             on
+                 u.id = ur.userid
+                 left join
              t_role r
-        ON
-             ur.roleid = r.id
-        WHERE u.username = #{name}
+             on
+                 ur.roleid = r.id
+        where u.username = #{name}
     </select>
+
+    <select id="findPermsByRoleId" parameterType="int" resultType="com.liu.entity.Perms">
+        SELECT
+            p.id,p.name,p.url
+        FROM
+            t_role r
+                LEFT JOIN
+            t_role_perms rp
+            ON
+                r.id = rp.roleid
+                LEFT JOIN
+            t_perms p
+            ON
+                p.id = rp.permsid
+        WHERE
+            r.id = #{id};
+    </select>
+
 
 </mapper>

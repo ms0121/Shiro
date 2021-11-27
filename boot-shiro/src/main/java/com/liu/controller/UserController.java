@@ -8,6 +8,7 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +20,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**
      * 登录
      * @param username
@@ -27,6 +31,8 @@ public class UserController {
      */
     @RequestMapping("login")
     public String login(String username, String password){
+        redisTemplate.opsForValue().set("name", "123");
+
         // 获取主体subject对象
         Subject subject = SecurityUtils.getSubject();
         try {

@@ -3,9 +3,11 @@ package com.liu.config;
 
 import com.liu.realm.CustomerRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.boot.autoconfigure.mongo.ReactiveMongoClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,6 +36,7 @@ public class ShiroConfig {
         map.put("/user/login", "anon"); // anon: 表示不需要进行拦截（放行认证请求）
         map.put("/user/register", "anon"); // 用户注册请求 放行
         map.put("/register.jsp", "anon"); // 用户注册页面
+        map.put("/order/*","anon");
         map.put("/**", "authc"); // 拦截所求的请求
 
         // 配置认证和授权的规则
@@ -65,7 +68,26 @@ public class ShiroConfig {
         matcher.setHashIterations(1024);
         // 将自定义的凭证校验器设置到自定义的域中
         realm.setCredentialsMatcher(matcher);
+
+        // 开启本地缓存
+        realm.setCacheManager(new EhCacheManager());
+        realm.setCachingEnabled(true); // 开启全局缓存数据库
+        realm.setAuthenticationCachingEnabled(true); // 开启认证缓存
+        realm.setAuthenticationCacheName("authenticationCache");
+        realm.setAuthorizationCachingEnabled(true); // 开启授权缓存
+        realm.setAuthorizationCacheName("authorizationCache");
         return realm;
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+

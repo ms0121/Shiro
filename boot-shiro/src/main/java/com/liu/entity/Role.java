@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
@@ -12,4 +14,8 @@ import lombok.experimental.Accessors;
 public class Role {
     private Integer id;
     private String name;
+
+    //   当前角色所拥有的权限
+    private List<Perms> perms;
+
 }

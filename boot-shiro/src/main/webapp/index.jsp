@@ -24,7 +24,7 @@
                     <shrio:hasPermission name="user:update:*">
                         <li><a href="">修改</a> </li>
                     </shrio:hasPermission>
-                    <shrio:hasPermission name="user:find:*">
+                    <shrio:hasPermission name="order:find:*">
                         <li><a href="">查询</a> </li>
                     </shrio:hasPermission>
                 </ul>

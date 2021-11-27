@@ -57,6 +57,21 @@
             <version>1.8.0</version>
         </dependency>
 
+        <!--  shiro默认使用的缓存数据库      -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-ehcache</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+
+        <!--   继承redis     -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-redis</artifactId>
+            <version>1.4.7.RELEASE</version>
+        </dependency>
+
+
         <!--        mysql-->
         <dependency>
             <groupId>mysql</groupId>
