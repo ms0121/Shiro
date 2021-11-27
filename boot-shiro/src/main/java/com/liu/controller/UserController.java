@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("user")
@@ -31,7 +30,13 @@ public class UserController {
      */
     @RequestMapping("login")
     public String login(String username, String password){
-        redisTemplate.opsForValue().set("name", "123");
+        // 添加redis作为缓存数据库，将查询得到的数据信息缓存在数据库中'
+        redisTemplate.opsForValue().set("zhangsan","123456");
+        System.out.println("======================存入成功！======================");
+        String value = (String) redisTemplate.opsForValue().get("zhangsan");
+        System.out.println("value = " + value);
+        System.out.println("============================");
+
 
         // 获取主体subject对象
         Subject subject = SecurityUtils.getSubject();
