@@ -1,5 +1,6 @@
 package com.liu.realm;
 
+import com.liu.cache.MyByteSource;
 import com.liu.entity.Perms;
 import com.liu.entity.User;
 import com.liu.service.UserService;
@@ -86,7 +87,9 @@ public class CustomerRealm extends AuthorizingRealm {
             // 认证密码
             simpleAuthenticationInfo = new SimpleAuthenticationInfo(principal, // 用户凭证(username)
                     user.getPassword(), // 用户密码
-                    ByteSource.Util.bytes(user.getSalt()),  // salt
+                    ByteSource.Util.bytes(user.getSalt()),  // salt()
+                    // 使用自定义的salt
+                    // new MyByteSource(user.getSalt()),
                     this.getName()); // 当前realm的名字
             return simpleAuthenticationInfo;
         }

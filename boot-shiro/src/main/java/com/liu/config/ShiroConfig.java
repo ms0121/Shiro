@@ -1,6 +1,7 @@
 package com.liu.config;
 
 
+import com.liu.cache.RedisCacheManager;
 import com.liu.realm.CustomerRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
@@ -70,7 +71,9 @@ public class ShiroConfig {
         realm.setCredentialsMatcher(matcher);
 
         // 开启本地缓存
-        realm.setCacheManager(new EhCacheManager());
+        // realm.setCacheManager(new EhCacheManager());
+        // 使用自定义的redis缓存数据库
+        realm.setCacheManager(new RedisCacheManager());
         realm.setCachingEnabled(true); // 开启全局缓存数据库
         realm.setAuthenticationCachingEnabled(true); // 开启认证缓存
         realm.setAuthenticationCacheName("authenticationCache");
