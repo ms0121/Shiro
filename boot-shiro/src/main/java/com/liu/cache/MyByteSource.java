@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 
-//自定义salt的是西安，重写ByteSource方法，是西安序列化，否则无法直接使用redis
+//自定义salt的是实现，重写ByteSource方法，是实现序列化，否则无法直接使用redis
 public class MyByteSource implements ByteSource, Serializable {
 
     private  byte[] bytes;
